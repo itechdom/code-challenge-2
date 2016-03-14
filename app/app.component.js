@@ -7,12 +7,15 @@ let appComponent = function(){
         scope:{
         },
         controller:function(appService,$scope){
-            var groupings = appService.getGroupings();
-            groupings.then((groupings)=>{
-                $scope.groupings = groupings;
-            })
             var categories = appService.getCategories();
-        }
+            var sub;
+            $scope.categories = categories;
+            $scope.data = {};
+            $scope.$watch('data.categorySelect',function(nVal,oVal){
+                sub = appService.getSubredditsByCategory(nVal);
+                $scope.subreddits = sub;
+            })       
+    }
     }
 }
 module.exports = appComponent;

@@ -1,4 +1,5 @@
 var subreddits =  require('./subreddits.js');
+var _ = require('lodash');
 
 var appService = function($q,cacheService){
 
@@ -7,18 +8,36 @@ var appService = function($q,cacheService){
             cacheService.cache(subreddits);
             resolve(subreddits);
         })
-
     }
     this.getCategories = function(){
-        var categories = subreddits.map((group)=>{
+        var arr = [];
+        subreddits.map((group)=>{
             return group.category;
-        }).map(()=>{
-
+        }).map((category)=>{
+            if(Array.isArray(category)){
+                category.forEach((cat)=>{
+                    arr.push(cat);
+                })
+            }
+            else{
+                arr.push(category);
+            }
         })
-        console.log(categories);
+        return _.uniq(arr);
     }
-    this.getSubredditsByCategory = function(category){
+    this.getSubredditsByCategory = function(selectedCategory){
 
+        var arr = subreddits.filter((group)=>{
+            if(Array.isArray(group.category)){
+                group.category.forEach((cat)=>{
+                    return cat === selectedCategory;
+                })
+            }
+            else{
+                    return group.category === selectedCategory;
+            }
+        })
+        return arr;
     }
 }
 var cacheService = function(){

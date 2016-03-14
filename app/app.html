@@ -1,11 +1,17 @@
 <div>
 
-<!-- list of categories -->
-<select></select>
-<!-- subreddits -->
-<select></select>
+    <form name="myForm">
+        <label for="categorySelect"> Select Category: </label>
+        <select name="categorySelect" id="categorySelect" ng-model="data.categorySelect">
+            <option ng-click='updateSubreddit()' ng-repeat="category in categories track by $index" value="{{category}}">{{category}}</option>
+        </select>
 
+        <div>
+        <label for="categorySelect"> Select Subreddits: </label>
+        <select name="categorySelect" id="categorySelect" ng-model="data.subredditSelect">
+            <option ng-repeat="subreddit in subreddits track by $index" value="{{subreddit.name}}">{{subreddit.name}}</option>
+        </select>
+    </div>
 
-{{groupings}}
-
+    </form>
 </div>
