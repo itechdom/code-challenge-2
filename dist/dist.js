@@ -54453,7 +54453,7 @@
 	var subreddits = __webpack_require__(8);
 	var _ = __webpack_require__(9);
 
-	var appService = function ($q, cacheService) {
+	var appService = function ($q, cacheService, $http) {
 
 	    this.getGroupings = function () {
 	        return $q((resolve, reject) => {
@@ -54477,7 +54477,6 @@
 	        return _.uniq(arr);
 	    };
 	    this.getSubredditsByCategory = function (selectedCategory) {
-
 	        var arr = subreddits.filter(group => {
 	            if (Array.isArray(group.category)) {
 	                group.category.forEach(cat => {
@@ -54489,6 +54488,20 @@
 	        });
 	        return arr;
 	    };
+	    this.getPostsBySubreddit = function (subreddit) {
+
+	        return $q((resolve, reject) => {
+	            getSubredditFromExternalAPI(subreddit).then(response => {
+	                response = response.data.data.children.map(post => {
+	                    return post.data;
+	                });
+	                resolve(response);
+	            });
+	        });
+	    };
+	    function getSubredditFromExternalAPI(subreddit) {
+	        return $http.get(`https://www.reddit.com/r/${ subreddit }.json`);
+	    }
 	};
 	var cacheService = function () {
 
@@ -69662,14 +69675,37 @@
 	        replace: true,
 	        template,
 	        scope: {},
-	        controller: function (appService, $scope) {
+	        controller: function (appService, $scope, $q) {
 	            var categories = appService.getCategories();
 	            var sub;
+	            var posts;
 	            $scope.categories = categories;
 	            $scope.data = {};
+	            $scope.firstPostScores = [];
+
 	            $scope.$watch('data.categorySelect', function (nVal, oVal) {
+
+	                //populate subreddits
 	                sub = appService.getSubredditsByCategory(nVal);
 	                $scope.subreddits = sub;
+
+	                //populate first graph (category graph with first post score from each subreddit)
+	                var qPosts = [];
+	                sub.forEach(s => {
+	                    qPosts.push(appService.getPostsBySubreddit(s.name));
+	                });
+	                $q.all(qPosts).then(data => {
+	                    //get the score of the first post in each subreddit, with the subreddit name included;
+	                    data.forEach((d, index) => {
+	                        $scope.firstPostScores.push({ score: d[0].score, subreddit: sub[index] });
+	                    });
+	                });
+	            });
+	            $scope.$watch('data.subredditSelect', function (nVal, oVal) {
+
+	                if (nVal) {
+	                    appService.getPostsBySubreddit(nVal).then(data => {});
+	                }
 	            });
 	        }
 	    };

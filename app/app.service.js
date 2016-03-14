@@ -1,7 +1,7 @@
 var subreddits =  require('./subreddits.js');
 var _ = require('lodash');
 
-var appService = function($q,cacheService){
+var appService = function($q,cacheService,$http){
 
     this.getGroupings = function(){
         return $q((resolve,reject)=>{
@@ -26,7 +26,6 @@ var appService = function($q,cacheService){
         return _.uniq(arr);
     }
     this.getSubredditsByCategory = function(selectedCategory){
-
         var arr = subreddits.filter((group)=>{
             if(Array.isArray(group.category)){
                 group.category.forEach((cat)=>{
@@ -34,17 +33,32 @@ var appService = function($q,cacheService){
                 })
             }
             else{
-                    return group.category === selectedCategory;
+                return group.category === selectedCategory;
             }
         })
         return arr;
+    }
+    this.getPostsBySubreddit = function(subreddit){
+
+        return $q((resolve,reject)=>{
+                getSubredditFromExternalAPI(subreddit).then((response)=>{
+                    response = response.data.data.children.map((post)=>{    
+                        return post.data;
+                    })
+                    resolve(response);
+                })
+        })
+
+    }
+    function getSubredditFromExternalAPI(subreddit){
+        return $http.get(`https://www.reddit.com/r/${subreddit}.json`)
     }
 }
 var cacheService = function(){
 
     this.data;
     this.cache = function(data){
-            this.data = data;
+        this.data = data;
     }
     this.isCached = function(){
 
