@@ -1,2 +1,2 @@
 // import docs
-require("./docs/docs.js");
+console.log("works");

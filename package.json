@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/itechdom/zpresent",
   "dependencies": {
+    "angular": "^1.5.0"
   },
   "devDependencies": {
     "babel-core": "^6.5.2",
