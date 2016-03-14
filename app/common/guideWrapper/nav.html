@@ -1,0 +1,30 @@
+<div>
+<div class="site-header__top">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-3" style="margin:10px 0px;">
+				<div class="mwi-logo" ></div>
+			</div>
+		</div>
+	
+	</div>
+</div>
+<div class="site-header__bottom">
+	<div class="container">
+		<div class="row">
+			<nav class="col-xs-9 site-header__navigation">
+			<div class="site-header__top-navigation ng-scope" >
+				<ul class="nav navbar-nav navbar-left">
+					<li ng-repeat="link in links">
+					<a class="site-header__top-navigation__link"  ng-href="{{link.href}}" ng-class="{ active: link.isActive }">{{link.title}}</a>
+					</li>
+
+				</ul>
+			</div>
+
+			</nav>
+
+		</div>
+	</div>
+</div>
+</div>

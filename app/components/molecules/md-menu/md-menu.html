@@ -1,0 +1,23 @@
+﻿<section>
+
+<md-menu md-offset="20 83" class="row" ng-cloak>
+<div md-menu-origin class="col-xs-4 site-header__cart" style="background-color:black" ng-click="$mdOpenMenu($event)">
+	<div class="site-header__shopping-cart">
+		<div class="site-header__shopping-cart__info">
+			<div class="site-header__shopping-cart__info__title" ng-bind="model.shoppingCartName"></div>
+			<div>
+				<span class="site-header__shopping-cart__info__items"><span ng-bind="model.count"></span> items</span>
+				<span class="site-header__shopping-cart__info__total" ng-bind="model.total | currency:'$':2"></span>
+			</div>
+		</div>
+	</div>
+</div>
+<md-menu-content width="4" ng-cloak>
+<div class="site-header__shopping-cart__dropdown">
+	<button class="btn btn--cta" ng-click="showCart()">Checkout</button>
+	Cart goes here
+</div>
+</md-menu-content>
+</md-menu>
+
+</section>

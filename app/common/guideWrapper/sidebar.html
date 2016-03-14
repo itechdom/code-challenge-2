@@ -1,0 +1,5 @@
+<div class="sidebar">
+	<div  ng-repeat="sublink in linkData.sublinks" class="md-button md-button--block md-ink-ripple sidebar__item">
+		<a du-smooth-scroll="{{sublink.title}}" ng-href='{{sublink.href}}' class="sidebar__link " >{{ sublink.title }}</a>
+	</div>
+</div>
