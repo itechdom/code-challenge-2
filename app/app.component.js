@@ -1,4 +1,5 @@
 var template = require('./app.html');
+
 let appComponent = function(){
     return{
         restrict: 'E',
@@ -12,14 +13,13 @@ let appComponent = function(){
                 var posts;
                 $scope.categories = categories;
                 $scope.data = {};
-                $scope.firstPostScores = [];
+                $scope.postScores = [];
 
                 $scope.$watch('data.categorySelect',function(nVal,oVal){
 
                     //populate subreddits
                     sub = appService.getSubredditsByCategory(nVal);
                     $scope.subreddits = sub;
-
 
 
                     //populate first graph (category graph with first post score from each subreddit)
@@ -30,7 +30,7 @@ let appComponent = function(){
                     $q.all(qPosts).then((data)=>{
                         //get the score of the first post in each subreddit, with the subreddit name included;
                         data.forEach((d,index)=>{
-                            $scope.firstPostScores.push({score:d[0].score,subreddit:sub[index]});
+                            $scope.postScores.push({value:d[0].score,name:sub[index]});
                         })
                     })
                 })       
@@ -38,6 +38,16 @@ let appComponent = function(){
 
                     if(nVal){
                         appService.getPostsBySubreddit(nVal).then((data)=>{
+
+                           data =  appService.sortSubredditByTopPosts(data);
+
+                           //empty the array
+                           $scope.postScores = [];
+
+                           //extract the top 3 posts
+                           for(var i=0;i<3;i++){
+                            $scope.postScores.push({name:data[i].title,value:data[i].score});
+                           }
 
                         })
                     }

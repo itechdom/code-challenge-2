@@ -39,16 +39,26 @@ var appService = function($q,cacheService,$http){
         return arr;
     }
     this.getPostsBySubreddit = function(subreddit){
-
         return $q((resolve,reject)=>{
-                getSubredditFromExternalAPI(subreddit).then((response)=>{
-                    response = response.data.data.children.map((post)=>{    
-                        return post.data;
-                    })
-                    resolve(response);
+            getSubredditFromExternalAPI(subreddit).then((response)=>{
+                response = response.data.data.children.map((post)=>{    
+                    return post.data;
                 })
+                resolve(response);
+            })
         })
+    }
+    this.sortSubredditByTopPosts = function(subreddit){
 
+        return subreddit.sort((a,b)=>{
+            if(a.score > b.score){
+                return -1;
+            }
+            if(a.score < b.score){
+                return 1;
+            }
+            return 0;
+        })
     }
     function getSubredditFromExternalAPI(subreddit){
         return $http.get(`https://www.reddit.com/r/${subreddit}.json`)
