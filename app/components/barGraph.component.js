@@ -12,19 +12,20 @@ let barGraphComponent = function(){
             link:function(scope,element){
 
                 //create a new svg element with the specified classes and add the chart to it
-                element.append('<svg class="chart"></svg>');
 
                 var width = 420,
                     barHeight = 20;
 
                 scope.$watch('posts',function(nVal,oVal){
-                    console.log(nVal);
                     renderChart(nVal);
-                });
+                },true);
 
                 renderChart(scope.posts);
 
                 function renderChart(data){
+
+                    d3.select(".chart").remove();
+                    element.append('<svg class="chart"></svg>');
 
                     var x = d3.scale.linear()
                         .range([0, width]);

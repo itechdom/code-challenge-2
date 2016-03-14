@@ -45758,6 +45758,7 @@
 	                });
 	                $q.all(qPosts).then(data => {
 	                    //get the score of the first post in each subreddit, with the subreddit name included;
+	                    $scope.postScores = [];
 	                    data.forEach((d, index) => {
 	                        $scope.postScores.push({ value: d[0].score, name: sub[index] });
 	                    });
@@ -45809,19 +45810,20 @@
 	        link: function (scope, element) {
 
 	            //create a new svg element with the specified classes and add the chart to it
-	            element.append('<svg class="chart"></svg>');
 
 	            var width = 420,
 	                barHeight = 20;
 
 	            scope.$watch('posts', function (nVal, oVal) {
-	                console.log(nVal);
 	                renderChart(nVal);
-	            });
+	            }, true);
 
 	            renderChart(scope.posts);
 
 	            function renderChart(data) {
+
+	                d3.select(".chart").remove();
+	                element.append('<svg class="chart"></svg>');
 
 	                var x = d3.scale.linear().range([0, width]);
 

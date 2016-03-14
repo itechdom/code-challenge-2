@@ -29,6 +29,7 @@ let appComponent = function(){
                     });
                     $q.all(qPosts).then((data)=>{
                         //get the score of the first post in each subreddit, with the subreddit name included;
+                        $scope.postScores = [];
                         data.forEach((d,index)=>{
                             $scope.postScores.push({value:d[0].score,name:sub[index]});
                         })
