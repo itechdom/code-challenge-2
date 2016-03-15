@@ -13,14 +13,12 @@ let barGraphComponent = function(){
 
                 //create a new svg element with the specified classes and add the chart to it
 
-                var width = 420,
+                var width = 720,
                     barHeight = 20;
 
                 scope.$watch('posts',function(nVal,oVal){
                     renderChart(nVal);
                 },true);
-
-                renderChart(scope.posts);
 
                 function renderChart(data){
 
@@ -28,14 +26,14 @@ let barGraphComponent = function(){
                     element.append('<svg class="chart"></svg>');
 
                     var x = d3.scale.linear()
-                        .range([0, width]);
+                        .range([0, width/10]);
 
                     var chart = d3.select(".chart")
                         .attr("width", width);
 
                     x.domain([0, d3.max(data, function(d) { return d.value; })]);
 
-                    chart.attr("height", barHeight * data.length);
+                    chart.attr("height", barHeight * data.length * 30);
 
                     var bar = chart.selectAll("g")
                         .data(data)
@@ -47,10 +45,19 @@ let barGraphComponent = function(){
                         .attr("height", barHeight - 1);
 
                     bar.append("text")
-                        .attr("x", function(d) { return x(d.value) - 3; })
+                        .attr("x", function(d) { 
+                            //quick fix, we have almost 6 pixels per letter
+                            var textLength = (d.name.length+1)*6.8;
+                            if(textLength > 150){
+                                return x(d.value)+textLength/1.5+30;
+                            }
+                            return x(d.value) + textLength + 10; 
+                        })
                         .attr("y", barHeight / 2)
                         .attr("dy", ".35em")
-                        .text(function(d) { return d.value; });
+                        .text(function(d) { return d.value+'-'+d.name; });
+
+                   
 
                     function type(d) {
                         d.value = +d.value;
